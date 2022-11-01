@@ -56,6 +56,7 @@ jobController.getAll = async (req, res, next) => {
   try {
     const jobs = await Job.find({});
     res.locals.jobs = jobs;
+    return next();
   } catch (err) {
     return next({
       log: `Error occurred in jobController getAll: ${err}`,
@@ -65,14 +66,24 @@ jobController.getAll = async (req, res, next) => {
 }
 
 // //Merge status and jobs
-// jobController.merge = (req, res, next) => {
-//   //merge res.locals.jobs and res.locals.status so
-//   for(job in res.locals.jobs) {
-//     //Match status record with jobs record and add the status to jobs before returning
-//   }
-//   //a status is added to each job object in the array
-//   //based on ID. Note that both are nested objects
-// }
+jobController.merge = (req, res, next) => {
+  try {
+    //merge res.locals.jobs and res.locals.status to add status to corresponding job in res.locals.job
+    for(let job in res.locals.jobs) {
+      // find corresponding job in res.locals.status
+      const matching = res.locals.status.filter(el => el.jobid === job._id)
+      // add status from res.locals.status to job in res.locals.jobs
+      job.status = matching.status;
+    }
+    console.log('res.locals.jobs in merge - should have statuses', res.locals.jobs);
+    return next();
+  } catch (err) {
+    return next({
+      log: `Error occurred in jobController merge: ${err}`,
+      message: {err: `An error occurred when merging jobs and statuses. See jobController.merge`}
+    })
+  }
+}
 
 // //Update a job
 // jobController.updateJob = () => {
