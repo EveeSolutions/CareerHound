@@ -125,13 +125,27 @@ export const jobsSlice = createSlice({
       state.jobs[action.payload._id].jobInfo.notes = action.payload.notes;
     },
 
-    editJobContact: (state, action) => {
+    editJobInterview: (state, action) => {
       state.jobs[action.payload._id].jobInfo.interview[action.payload.property] = action.payload.value;
     },
 
   }
 });
 
-export const { setJobs, setJobStatus, setJobSalary, addJobBenefits, setJobContact } = jobsSlice.actions;
+export const { 
+  setJobs,
+  setJobStatus, 
+  setJobTitle,
+  setJobCompany,
+  setJobSalary,
+  addJobBenefits,
+  setJobLocation,
+  setJobSkills,
+  setJobLink,
+  clearJobBenefits,
+  setJobContact,
+  editJobContact,
+  setJobNotes,
+  editJobInterview } = jobsSlice.actions;
 
 export default jobsSlice.reducer;
