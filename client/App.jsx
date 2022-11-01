@@ -1,9 +1,14 @@
 import React from 'react'
+import StatusContainer from './component/StatusContainer.jsx'
 
 function App() {
   return (
-    <div>App</div>
+    <div>
+      <h1>CareerHound</h1>
+      <StatusContainer />
+    </div>  
   )
 }
 
-export default App
+export default App;
+
