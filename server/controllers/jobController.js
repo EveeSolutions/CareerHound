@@ -86,15 +86,57 @@ jobController.merge = (req, res, next) => {
 }
 
 // //Update a job
-// jobController.updateJob = () => {
-//   //Locates a specific job in mongoDB and updates it
-//   //returns updated job on res.locals.job (note - not plural)
-// }
+jobController.updateJob = (req, res, next) => {
+  // destructure req.body
+  const { title, company, salary, benefits, location, skills, link, contact, jobNotes, interview } = req.params;
+  // Locates a specific job in mongoDB and updates it
+  Job.findOneAndUpdate({ title: title, company: company, salary: salary, benefits: benefits, location: location, skills: skills, link: link, contact: contact, notes: jobNotes, interview: interview},
+    (err, job) => {
+      if (err) {
+        return next({
+          log: 'Job document change failure',
+          status: 400,
+          message: { err: 'Job document not changed' },
+        });
+      } else {
+        const { interviewNotes, type, status, resumeVersion } = interview;
+        Interview.findOneAndUpdate({ notes: interviewNotes, type: type, status: status, resumeVersion: resumeVersion }, 
+          (err, interview) => {
+            if (err) {
+              return next({
+                log: 'Interview document change failure',
+                status: 400,
+                message: { err: 'Interview document not changed' },
+              });
+            } else {
+              res.locals.interview = interview;
+            }
+        });
+      const { name, phone, email, contactNotes, lastContact } = contact;
+      Contact.findOneAndUpdate({ name: name, phone: phone, email: email, notes: contactNotes, lastContact: lastContact }, 
+        (err, contact) => {
+          if (err) {
+            return next({
+              log: 'Contact document change failure',
+              status: 400,
+              message: { err: 'Contact document not changed' },
+            });
+          } else {
+            res.locals.contact = contact;
+          }
+        });
+      //returns updated job on res.locals.job (note - not plural)
+      res.locals.job = job;
+      console.log('at end of updateJob: jobs, interviews, contacts => ', res.locals.job, res.locals.interview, res.locals.contact);
+      return next();
+    };
+  });
+};
 
 // //Delete a job
-// jobController.deleteJob = () => {
-//   //Locates and deletes job from MongoDB
-//   //Return deleted job to res.locals.job (note - not plural)
-// }
+jobController.deleteJob = (req, res, next) => {
+  //Locates and deletes job from MongoDB
+  //Return deleted job to res.locals.job (note - not plural)
+}
 
 module.exports = jobController;
