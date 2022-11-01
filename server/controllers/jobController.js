@@ -53,18 +53,15 @@ jobController.createJob = (req, res, next) => {
 //Get all jobs -> will be passed a req.body.status that has an array of all status
     //Need to merge the status with the job before returning to front end
 jobController.getAll = async (req, res, next) => {
-await Jobs.find()
-.then((data) => {
-  res.locals.jobs = data; //I don't recall what the returned data will look like so we may need to add a property to access it
-  return next()
-})
-  .catch((err) => {
+  try {
+    const jobs = await Job.find({});
+    res.locals.jobs = jobs;
+  } catch (err) {
     return next({
       log: `Error occurred in jobController getAll: ${err}`,
       message: {err: `An error occurred when retreiving all jobs from database. See jobController.getAll`}
     })
-    }
-  )
+  }
 }
 
 // //Merge status and jobs
