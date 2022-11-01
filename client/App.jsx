@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import StatusContainer from './component/StatusContainer.jsx';
 import { useSelector, useDispatch } from 'react-redux';
-import { setJobSalary, setJobStatus, setJobBenefits } from './reducers/jobsReducer';
+//import { setJobSalary, setJobStatus, setJobBenefits } from './reducers/jobsReducer';
 
 function App() { 
   const jobs = useSelector((state) => state.jobs);
