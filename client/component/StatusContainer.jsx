@@ -1,11 +1,11 @@
 import React from 'react'
-import JobCard from './JobCard.jsx';
+// import JobCard from './JobCardForm.jsx';
 // import { Container } from '@mui/system';
 
 function InterestedBox() {
   return (
     <div>
-      <JobCard /> 
+  
     </div>
 
   )

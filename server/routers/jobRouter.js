@@ -1,9 +1,9 @@
-const express = require('express')
+// const express = require('express')
 
-const statusController = require('../controllers/statusController');
-const jobController = require('../controllers/jobController');
+// const statusController = require('../controllers/statusController');
+// const jobController = require('../controllers/jobController');
 
-const router = express.Router();
+// const router = express.Router();
 
 // router.get('/all',
 //   statusController.getAll, jobController.getAll, jobController.merge,
@@ -27,4 +27,4 @@ const router = express.Router();
 //   return res.status(200).json(res.locals.job)
 //   })
 
-module.exports = router;
+// module.exports = router;
