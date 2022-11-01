@@ -29,7 +29,8 @@ const Contact = mongoose.model('Contact', contactSchema);
 const interviewSchema = new Schema({
     notes: { type: String, required: false },
     type: { type: String, required: true }, // Phone screen, Behavioral, Technical
-    status: { type: String, required: true} // Pass, Fail, Waiting
+    status: { type: String, required: true}, // Pass, Fail, Waiting
+    resumeVersion: { type: String, required: true }
 }, { minimize: false })
 
 const Interview = mongoose.model('Interview', interviewSchema);
