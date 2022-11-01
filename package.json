@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production node server/server.js",
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open --hot --progress --color \" \"nodemon ./server/server.js\"",
-    "test": "node __tests__/server.test.js"
+    "test": "jest"
   },
   "author": "EveeSolutions",
   "license": "MIT",
@@ -15,6 +15,7 @@
     "@babel/core": "^7.19.6",
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-react": "^7.12.13",
+    "@jest/globals": "^29.2.2",
     "babel-loader": "^9.0.1",
     "chai": "^4.3.6",
     "concurrently": "^7.5.0",
@@ -26,6 +27,7 @@
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^29.2.2",
     "redux-devtools-extension": "^2.13.9",
     "style-loader": "^2.0.0",
     "supertest": "^6.3.1",
