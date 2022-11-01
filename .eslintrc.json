@@ -30,7 +30,9 @@
     "react/prop-types": "off",
     "react/jsx-key": "warn",
     "no-underscore-dangle": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "no-else-return": "off",
+    "no-shadow": "off"
   },
   "settings": {
     "react": {
