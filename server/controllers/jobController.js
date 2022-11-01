@@ -68,26 +68,26 @@ await Jobs.find()
   )
 }
 
-//Merge status and jobs
-jobController.merge = (req, res, next) => {
-  //merge res.locals.jobs and res.locals.status so
-  for(job in res.locals.jobs) {
-    //Match status record with jobs record and add the status to jobs before returning
-  }
-  //a status is added to each job object in the array
-  //based on ID. Note that both are nested objects
-}
+// //Merge status and jobs
+// jobController.merge = (req, res, next) => {
+//   //merge res.locals.jobs and res.locals.status so
+//   for(job in res.locals.jobs) {
+//     //Match status record with jobs record and add the status to jobs before returning
+//   }
+//   //a status is added to each job object in the array
+//   //based on ID. Note that both are nested objects
+// }
 
-//Update a job
-jobController.updateJob = () => {
-  //Locates a specific job in mongoDB and updates it
-  //returns updated job on res.locals.job (note - not plural)
-}
+// //Update a job
+// jobController.updateJob = () => {
+//   //Locates a specific job in mongoDB and updates it
+//   //returns updated job on res.locals.job (note - not plural)
+// }
 
-//Delete a job
-jobController.deleteJob = () => {
-  //Locates and deletes job from MongoDB
-  //Return deleted job to res.locals.job (note - not plural)
-}
+// //Delete a job
+// jobController.deleteJob = () => {
+//   //Locates and deletes job from MongoDB
+//   //Return deleted job to res.locals.job (note - not plural)
+// }
 
-module.exports = jobController;
+// module.exports = jobController;
