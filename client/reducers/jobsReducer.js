@@ -34,23 +34,21 @@ const initialState = {
         location: 'Remote',
         skills: ['JavaScript', 'HTML', 'CSS'],
         link: 'spotify.com',
-        contact: [
-          {
-            name: 'John Smith',
-            phone: '7738675309',
-            email: 'johnsmith@spotify.com',
-            notes: 'balding',
-            last_contacted: 'Nov 1 2022, 09:52:32'
-          }
-        ],
+        contact:
+        {
+          name: 'John Smith',
+          phone: '7738675309',
+          email: 'johnsmith@spotify.com',
+          notes: 'balding',
+          lastContact: 'Nov 1 2022, 09:52:32'
+        },
         notes: 'Likes cheese',
-        interview: [
-          {
-            notes: 'at office',
-            type: 'behavioral',
-            status: 'pass'
-          }
-        ]
+        interview:
+        {
+          notes: 'at office',
+          type: 'behavioral',
+          status: 'pass'
+        },
       }
     }
   }
@@ -74,22 +72,66 @@ export const jobsSlice = createSlice({
     //action payload status should always be a string
     setJobStatus: (state, action) => {
       state.jobs[action.payload._id].status = action.payload.status;
-      state.jobs[action.payload._id].timestamp = action.payload.timestamp;
+      //state.jobs[action.payload._id].timestamp = action.payload.timestamp;
     },
 
-    //to set salary, need the primary key of the job being changed and the new salary (integer) from the form input
+    setJobTitle: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.title = action.payload.title;
+    },
+
+    setJobCompany: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.company = action.payload.company;
+    },
+
+    //to set salary, need the primary key of the job being changed and the new salary (integer) from the form input in action.payload.salary
     setJobSalary: (state, action) => {
       state.jobs[action.payload._id].jobInfo.salary = action.payload.salary;
-      state.jobs[action.payload._id].timestamp = action.payload.timestamp;
     },
 
-    //to set benefits, need primary key of job being changed and array of added benefits
-    setJobBenefits: (state, action) => {
+    //to add benefits, need primary key of job being changed and array of added benefits in action.payload.benefits
+    //also should work when benefits array starts off empty
+    addJobBenefits: (state, action) => {
       state.jobs[action.payload._id].jobInfo.benefits = [...state.jobs[action.payload._id].jobInfo.benefits, ...action.payload.benefits]
-    }
+    },
+
+    //to clear benefits in case you want to remove a previously added benefit
+    clearJobBenefits: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.benefits = [];
+    },
+
+    setJobLocation: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.location = action.payload.location;
+    },
+
+    setJobSkills: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.skills = action.payload.skills;
+    },
+
+    setJobLink: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.link = action.payload.link;
+    },
+
+    //can set contact by having primary key and full new contact object.
+    setJobContact: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.contact = action.payload.contact;
+    },
+
+    //modular reducer, will change the state contact property specified in payload property key, and change it to payload.value
+    editJobContact: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.contact[action.payload.property] = action.payload.value;
+    },
+
+    setJobNotes: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.notes = action.payload.notes;
+    },
+
+    editJobContact: (state, action) => {
+      state.jobs[action.payload._id].jobInfo.interview[action.payload.property] = action.payload.value;
+    },
+
   }
 });
 
-export const { setJobs, setJobStatus, setJobSalary, setJobBenefits } = jobsSlice.actions;
+export const { setJobs, setJobStatus, setJobSalary, addJobBenefits, setJobContact } = jobsSlice.actions;
 
 export default jobsSlice.reducer;

@@ -48,7 +48,7 @@ function App() {
       }}))}>Set Job Info</button> */}
 {/*       <button onClick={() => dispatch(setJobSalary({_id: 'testjob', salary: 99999, timestamp: Date.now()}))}>Set Salary</button>
       <button onClick={() => dispatch(setJobStatus({_id: 'testjob', status: 'interviewing', timestamp: Date.now()}))}>Set Status</button>
-      <button onClick={() => dispatch(setJobBenefits({_id: 'testjob', benefits: ['test benefit 1', 'test benefit 2'], timestamp: Date.now()}))}>Add Benefits</button> */}
+      <button onClick={() => dispatch(addJobBenefits({_id: 'testjob', benefits: ['test benefit 1', 'test benefit 2'], timestamp: Date.now()}))}>Add Benefits</button> */}
       <StatusContainer />
     </div>  
   )
