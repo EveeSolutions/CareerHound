@@ -53,40 +53,128 @@ jobController.createJob = (req, res, next) => {
 //Get all jobs -> will be passed a req.body.status that has an array of all status
     //Need to merge the status with the job before returning to front end
 jobController.getAll = async (req, res, next) => {
-await Jobs.find()
-.then((data) => {
-  res.locals.jobs = data; //I don't recall what the returned data will look like so we may need to add a property to access it
-  return next()
-})
-  .catch((err) => {
+  try {
+    const jobs = await Job.find({});
+    res.locals.jobs = jobs;
+    return next();
+  } catch (err) {
     return next({
       log: `Error occurred in jobController getAll: ${err}`,
       message: {err: `An error occurred when retreiving all jobs from database. See jobController.getAll`}
     })
-    }
-  )
+  }
 }
 
 // //Merge status and jobs
-// jobController.merge = (req, res, next) => {
-//   //merge res.locals.jobs and res.locals.status so
-//   for(job in res.locals.jobs) {
-//     //Match status record with jobs record and add the status to jobs before returning
-//   }
-//   //a status is added to each job object in the array
-//   //based on ID. Note that both are nested objects
-// }
+jobController.merge = (req, res, next) => {
+  try {
+    //merge res.locals.jobs and res.locals.status to add status to corresponding job in res.locals.job
+    for(let job in res.locals.jobs) {
+      // find corresponding job in res.locals.status
+      const matching = res.locals.status.filter(el => el.jobid === job._id)
+      // add status from res.locals.status to job in res.locals.jobs
+      job.status = matching.status;
+    }
+    console.log('res.locals.jobs in merge - should have statuses', res.locals.jobs);
+    return next();
+  } catch (err) {
+    return next({
+      log: `Error occurred in jobController merge: ${err}`,
+      message: {err: `An error occurred when merging jobs and statuses. See jobController.merge`}
+    })
+  }
+}
 
 // //Update a job
-// jobController.updateJob = () => {
-//   //Locates a specific job in mongoDB and updates it
-//   //returns updated job on res.locals.job (note - not plural)
-// }
+jobController.updateJob = (req, res, next) => {
+  // destructure req.body
+  const { title, company, salary, benefits, location, skills, link, contact, jobNotes, interview } = req.body;
+  // Locates a specific job in mongoDB and updates it
+  Job.findOneAndUpdate({_id: req.params._id}, { title: title, company: company, salary: salary, benefits: benefits, location: location, skills: skills, link: link, contact: contact, notes: jobNotes, interview: interview}, { new: true},
+    (err, job) => {
+      if (err) {
+        return next({
+          log: 'Job document change failure',
+          status: 400,
+          message: { err: 'Job document not changed' },
+        });
+      } else {
+        const { interviewNotes, type, status, resumeVersion } = interview;
+        // probably not right yet - how do I access the interview doc?
+        Interview.findOneAndUpdate({_id: req.params.interview._id}, { notes: interviewNotes, type: type, status: status, resumeVersion: resumeVersion }, { new: true},
+          (err, interview) => {
+            if (err) {
+              return next({
+                log: 'Interview document change failure',
+                status: 400,
+                message: { err: 'Interview document not changed' },
+              });
+            } else {
+              res.locals.interview = interview;
+            }
+        });
+      const { name, phone, email, contactNotes, lastContact } = contact;
+      // probably not right yet - how do I access the contact doc?
+      Contact.findOneAndUpdate({_id: req.params.contact._id}, { name: name, phone: phone, email: email, notes: contactNotes, lastContact: lastContact }, { new: true},
+        (err, contact) => {
+          if (err) {
+            return next({
+              log: 'Contact document change failure',
+              status: 400,
+              message: { err: 'Contact document not changed' },
+            });
+          } else {
+            res.locals.contact = contact;
+          }
+        });
+      //returns updated job on res.locals.job (note - not plural)
+      res.locals.job = job;
+      console.log('at end of updateJob: jobs, interviews, contacts => ', res.locals.job, res.locals.interview, res.locals.contact);
+      return next();
+    };
+  });
+};
 
 // //Delete a job
-// jobController.deleteJob = () => {
-//   //Locates and deletes job from MongoDB
-//   //Return deleted job to res.locals.job (note - not plural)
-// }
+jobController.deleteJob = (req, res, next) => {
+  //Locates and deletes job from MongoDB
+  // Locates a specific job in mongoDB and updates it
+  Job.findOneAndDelete({ _id: req.params._id},
+    (err, job) => {
+      if (err) {
+        return next({
+          log: 'Job document deletion failure',
+          status: 400,
+          message: { err: 'Job document not deleted' },
+        });
+      } else {
+        Interview.findOneAndDelete({ /** How do I access this? */ }, 
+          (err, interview) => {
+            if (err) {
+              return next({
+                log: 'Interview document deletion failure',
+                status: 400,
+                message: { err: 'Interview document not deleted' },
+              });
+            } else {
+              res.locals.interview = interview;
+            }
+        });
+      Contact.findOneAndUpdate({ /** How do I access this? */ }, 
+        (err, contact) => {
+          if (err) {
+            return next({
+              log: 'Contact document deletion failure',
+              status: 400,
+              message: { err: 'Contact document not deleted' },
+            });
+          } else {
+            res.locals.contact = contact;
+          }
+        });
+      return next();
+    };
+  });
+}
 
 module.exports = jobController;
