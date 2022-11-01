@@ -20,7 +20,16 @@ primary job key: {
  */
 const initialState = { 
   //jobs is an object with keys of jobprimarykey 
-  jobs: {}
+  jobs: {
+    test: {
+      mongoId: 1,
+      status: 'applied',
+      jobInfo: {
+        title: 'Software Engineer',
+        company: 'Spotify'
+      }
+    }
+  }
 }
 
 export const jobsSlice = createSlice({
@@ -31,7 +40,11 @@ export const jobsSlice = createSlice({
       state.jobs = action.payload;
     },
     setJobInfo: (state, action) => {
-      state.jobs
+      state.jobs[action.payload.jobkey].jobInfo = action.payload.jobInfo;
     }
   }
-})
+});
+
+export const { setJobs, setJobInfo } = jobsSlice.actions;
+
+export default jobsSlice.reducer;
