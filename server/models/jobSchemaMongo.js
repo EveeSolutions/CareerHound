@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('dotenv').config;
 const Schema = mongoose.Schema;
 
 const jobSchema = new Schema({
@@ -34,6 +35,14 @@ const interviewSchema = new Schema({
 }, { minimize: false })
 
 const Interview = mongoose.model('Interview', interviewSchema);
+
+const mongoConnection = mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    dbName: job_info
+  })
+  .then(() => {console.log('connected to Mongo DB')})
+  .catch((err) => {console.log(`Error: ${err}`)});
 
 module.exports = {
     Job,

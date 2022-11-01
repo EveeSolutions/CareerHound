@@ -17,6 +17,11 @@ router.get('/archived',
   return res.status(200).json(res.locals.jobs)
 })
 
+router.post('/create', jobController.createJob,
+  (req, res) => {
+  return res.status(200).json(res.locals.jobs)
+  })
+
 router.post('/update', jobController.updateJob,
   (req, res) => {
   return res.status(200).json(res.locals.job)
