@@ -32,6 +32,9 @@
     "webpack-dev-server": "^4.5.0"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/system": "^5.10.12",
     "@reduxjs/toolkit": "^1.8.6",
     "bcrypt": "^5.1.0",
     "cross-env": "^7.0.3",
