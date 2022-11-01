@@ -8,7 +8,7 @@ const statusRouter = require('./routers/statusRouter');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // not sure if we need
-// app.use(express.static(path.resolve('./client/assets')));
+app.use(express.static(path.resolve('./client/assets')));
 
 // app.use('/job', jobRouter);
 app.use('/status', statusRouter);

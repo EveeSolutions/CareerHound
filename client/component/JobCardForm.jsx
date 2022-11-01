@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import '../assets/styles.css'
 
 function JobCardForm() {
 
@@ -29,7 +30,7 @@ function JobCardForm() {
                     <p>Company:</p>
                     <input name ='company' required/>
                 </label>
-                <label>
+                {/* <label>
                     <p>Location:</p>
                     <input name ='location' />
                 </label>
@@ -48,9 +49,9 @@ function JobCardForm() {
                 <label>
                     <p>Benefits:</p>
                     <input name ='benefits' />
-                </label>
+                </label> */}
             </fieldset>
-            <fieldset>
+            {/* <fieldset>
                 <legend>Contacts</legend>
                 <label>
                     <p>Contact Name:</p>
@@ -66,8 +67,8 @@ function JobCardForm() {
                 </label>
                 <p><label for="contactNotes">Contact Notes:</label></p>
                 <textarea id="contactNotes" name="contactNotes" rows="4" cols="50"></textarea>
-            </fieldset>
-            <fieldset>
+            </fieldset> */}
+            {/* <fieldset>
                 <legend>Interview</legend>
                 <label>
                     <p>Interview Date:</p>
@@ -88,7 +89,7 @@ function JobCardForm() {
             <fieldset>
                 <legend>Notes</legend>
                 <textarea id="generalNotes" name="generalNotes" rows="4" cols="50"></textarea>
-            </fieldset>
+            </fieldset> */}
             <button type='submit'>Submit</button>
         </form>
     </div> 
