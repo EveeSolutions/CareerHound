@@ -15,10 +15,22 @@ module.exports = {
   devtool: 'eval-source-map',
   mode: 'development',
   devServer: {
+    static: {
+          publicPath: 'dist',
+          directory: path.resolve(__dirname, 'dist')
+        },
     hot: true,
 
     proxy: {
-      '/': {
+      '/job/**': {
+        target: 'http://localhost:3000/',
+        secure: false,
+      },
+      '/status/**': {
+        target: 'http://localhost:3000/',
+        secure: false,
+      },
+      '/**': {
         target: 'http://localhost:3000/',
         secure: false,
       },
@@ -41,7 +53,7 @@ module.exports = {
       {
         test: /.(css|scss)$/,
         exclude: /node_modules/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf)$/,

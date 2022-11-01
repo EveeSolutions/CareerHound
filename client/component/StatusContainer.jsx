@@ -5,7 +5,7 @@ import JobCard from './JobCard.jsx';
 function InterestedBox() {
   return (
     <div>
-       
+      <JobCard /> 
     </div>
 
   )
