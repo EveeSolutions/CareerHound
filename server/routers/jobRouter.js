@@ -1,30 +1,30 @@
-const express = require('express')
+// const express = require('express')
 
-const statusController = require('../controllers/statusController');
-const jobController = require('../controllers/jobController');
+// const statusController = require('../controllers/statusController');
+// const jobController = require('../controllers/jobController');
 
-const router = express.Router();
+// const router = express.Router();
 
-router.get('/all',
-  statusController.getAll, jobController.getAll, jobController.merge,
-(req, res) => {
-  return res.status(200).json(res.locals.jobs);
-})
+// router.get('/all',
+//   statusController.getAll, jobController.getAll, jobController.merge,
+// (req, res) => {
+//   return res.status(200).json(res.locals.jobs);
+// })
 
-router.get('/archived',
-  statusController.getArchived, jobController.getArchived, jobController.merge,
-  (req, res) => {
-  return res.status(200).json(res.locals.jobs)
-})
+// router.get('/archived',
+//   statusController.getArchived, jobController.getArchived, jobController.merge,
+//   (req, res) => {
+//   return res.status(200).json(res.locals.jobs)
+// })
 
-router.post('/update', jobController.updateJob,
-  (req, res) => {
-  return res.status(200).json(res.locals.job)
-  })
+// router.post('/update', jobController.updateJob,
+//   (req, res) => {
+//   return res.status(200).json(res.locals.job)
+//   })
 
-router.post('/delete', jobController.deleteJob, statusController.deleteStatus,
-  (req, res) => {
-  return res.status(200).json(res.locals.job)
-  })
+// router.post('/delete', jobController.deleteJob, statusController.deleteStatus,
+//   (req, res) => {
+//   return res.status(200).json(res.locals.job)
+//   })
 
-module.exports = router;
+// module.exports = router;
