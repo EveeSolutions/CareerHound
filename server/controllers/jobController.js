@@ -1,5 +1,4 @@
-// const mongoConnection = require('../models/mongoConnection');
-// mongoConnection();
+const mongoConnection = require('../models/mongoConnection');
 const { Job, Interview, Contact } = require('../models/jobSchemaMongo'); // Mongo DB
 
 const jobController = {};
@@ -9,7 +8,7 @@ jobController.createJob = (req, res, next) => {
   // destructure req.body
   const { title, company, salary, benefits, location, skills, link, contact, jobNotes, interview } = req.body;
   // create mongo document based off of req.body
-  Job.create({ title: title, company: company, salary: salary, benefits: benefits, location: location, skills: skills, link: link, contact: contact, notes: jobNotes, interview: interview}, 
+  Job.create({ title: title, company: company, salary: salary, benefits: benefits, location: location, skills: skills, link: link, contact: contact, notes: jobNotes, interview: interview},
     (err, jobs) => {
       if (err) {
         return next({
@@ -90,4 +89,4 @@ await Jobs.find()
 //   //Return deleted job to res.locals.job (note - not plural)
 // }
 
-// module.exports = jobController;
+module.exports = jobController;

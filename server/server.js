@@ -2,15 +2,15 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// const jobRouter = require('./routers/jobRouter');
+const jobRouter = require('./routers/jobRouter');
 const statusRouter = require('./routers/statusRouter');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // not sure if we need
-// app.use(express.static(path.resolve('./client/assets')));
+app.use(express.static(path.resolve('./client/assets')));
 
-// app.use('/job', jobRouter);
+app.use('/job', jobRouter);
 app.use('/status', statusRouter);
 
 app.get('*', (req, res) => {
