@@ -15,10 +15,22 @@ module.exports = {
   devtool: 'eval-source-map',
   mode: 'development',
   devServer: {
+    static: {
+          publicPath: 'dist',
+          directory: path.resolve(__dirname, 'dist')
+        },
     hot: true,
 
     proxy: {
-      '/': {
+      '/job/**': {
+        target: 'http://localhost:3000/',
+        secure: false,
+      },
+      '/status/**': {
+        target: 'http://localhost:3000/',
+        secure: false,
+      },
+      '/**': {
         target: 'http://localhost:3000/',
         secure: false,
       },
