@@ -88,9 +88,9 @@ jobController.merge = (req, res, next) => {
 // //Update a job
 jobController.updateJob = (req, res, next) => {
   // destructure req.body
-  const { title, company, salary, benefits, location, skills, link, contact, jobNotes, interview } = req.params;
+  const { title, company, salary, benefits, location, skills, link, contact, jobNotes, interview } = req.body;
   // Locates a specific job in mongoDB and updates it
-  Job.findOneAndUpdate({ title: title, company: company, salary: salary, benefits: benefits, location: location, skills: skills, link: link, contact: contact, notes: jobNotes, interview: interview},
+  Job.findOneAndUpdate({_id: req.params._id}, { title: title, company: company, salary: salary, benefits: benefits, location: location, skills: skills, link: link, contact: contact, notes: jobNotes, interview: interview}, { new: true},
     (err, job) => {
       if (err) {
         return next({
@@ -100,7 +100,8 @@ jobController.updateJob = (req, res, next) => {
         });
       } else {
         const { interviewNotes, type, status, resumeVersion } = interview;
-        Interview.findOneAndUpdate({ notes: interviewNotes, type: type, status: status, resumeVersion: resumeVersion }, 
+        // probably not right yet - how do I access the interview doc?
+        Interview.findOneAndUpdate({_id: req.params.interview._id}, { notes: interviewNotes, type: type, status: status, resumeVersion: resumeVersion }, { new: true},
           (err, interview) => {
             if (err) {
               return next({
@@ -113,7 +114,8 @@ jobController.updateJob = (req, res, next) => {
             }
         });
       const { name, phone, email, contactNotes, lastContact } = contact;
-      Contact.findOneAndUpdate({ name: name, phone: phone, email: email, notes: contactNotes, lastContact: lastContact }, 
+      // probably not right yet - how do I access the contact doc?
+      Contact.findOneAndUpdate({_id: req.params.contact._id}, { name: name, phone: phone, email: email, notes: contactNotes, lastContact: lastContact }, { new: true},
         (err, contact) => {
           if (err) {
             return next({
@@ -136,7 +138,43 @@ jobController.updateJob = (req, res, next) => {
 // //Delete a job
 jobController.deleteJob = (req, res, next) => {
   //Locates and deletes job from MongoDB
-  //Return deleted job to res.locals.job (note - not plural)
+  // Locates a specific job in mongoDB and updates it
+  Job.findOneAndDelete({ _id: req.params._id},
+    (err, job) => {
+      if (err) {
+        return next({
+          log: 'Job document deletion failure',
+          status: 400,
+          message: { err: 'Job document not deleted' },
+        });
+      } else {
+        Interview.findOneAndDelete({ /** How do I access this? */ }, 
+          (err, interview) => {
+            if (err) {
+              return next({
+                log: 'Interview document deletion failure',
+                status: 400,
+                message: { err: 'Interview document not deleted' },
+              });
+            } else {
+              res.locals.interview = interview;
+            }
+        });
+      Contact.findOneAndUpdate({ /** How do I access this? */ }, 
+        (err, contact) => {
+          if (err) {
+            return next({
+              log: 'Contact document deletion failure',
+              status: 400,
+              message: { err: 'Contact document not deleted' },
+            });
+          } else {
+            res.locals.contact = contact;
+          }
+        });
+      return next();
+    };
+  });
 }
 
 module.exports = jobController;
