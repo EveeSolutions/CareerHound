@@ -1,0 +1,40 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
+  "plugins": ["import", "react", "jsx-a11y", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "airbnb",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "rules": {
+    "prettier/prettier": 2,
+    "no-unused-vars": ["off", { "vars": "local" }],
+    "space-infix-ops": "warn",
+    "no-console": 0,
+    "arrow-body-style": 0,
+    "react/prefer-stateless-function": "off",
+    "react/prop-types": "off",
+    "react/jsx-key": "warn",
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
