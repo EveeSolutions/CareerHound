@@ -25,7 +25,7 @@ router.get(
 router.post(
   '/create',
   jobController.createJob,
-  statusController.CreateJobStatus,
+  statusController.createJobStatus,
   (req, res) => {
     return res.status(200).json(res.locals.jobs);
   }
