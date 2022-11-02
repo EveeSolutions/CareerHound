@@ -3,6 +3,7 @@ const db = require('../models/sqlConnection');
 
 const statusController = {};
 
+
 // Get all status
 statusController.getAll = async (req, res, next) => {
   // return an object of status w/id - this needs to be merged with the jobs
@@ -10,7 +11,7 @@ statusController.getAll = async (req, res, next) => {
   const querStr = 'SELECT * FROM public.jobs';
   try {
     const queryRes = await db.query(querStr);
-    res.locals.allJobs = queryRes.rows;
+    res.locals.allStatus = queryRes.rows;
     return next();
   } catch (error) {
     return next({
