@@ -6,6 +6,7 @@ const jobController = {};
 // Create Job
 jobController.createJob = (req, res, next) => {
   // destructure req.body
+  console.log('adding job')
   const {
     title,
     company,
@@ -32,108 +33,90 @@ jobController.createJob = (req, res, next) => {
       notes: jobNotes,
       interview,
     },
-    (err, jobs) => {
+    (err, job) => {
       if (err) {
+        console.log(job, err)
         return next({
           log: 'Job document creation failure',
           status: 400,
           message: { err: 'Job document not created' },
         });
       } else {
-        const { interviewNotes, type, status, resumeVersion } = interview;
-        Interview.create(
-          {
-            notes: interviewNotes,
-            type,
-            status,
-            resumeVersion,
-          },
-          (err, interviews) => {
-            if (err) {
-              return next({
-                log: 'Interview document creation failure',
-                status: 400,
-                message: { err: 'Interview document not created' },
-              });
-            } else {
-              res.locals.interviews = interviews;
-            }
-          }
-        );
-        const { name, phone, email, contactNotes, lastContact } = contact;
-        Contact.create(
-          {
-            name,
-            phone,
-            email,
-            notes: contactNotes,
-            lastContact,
-          },
-          (err, contacts) => {
-            if (err) {
-              return next({
-                log: 'Contact document creation failure',
-                status: 400,
-                message: { err: 'Contact document not created' },
-              });
-            } else {
-              res.locals.contacts = contacts;
-            }
-          }
-        );
-        res.locals.jobs = jobs;
-        console.log(
-          'at end of createJob: jobs, interviews, contacts => ',
-          res.locals.jobs,
-          res.locals.interviews,
-          res.locals.contacts
-        );
+        // handle edge case that there is no interview information
+        if (interview !== undefined) {
+          const { interviewNotes, type, status, resumeVersion } = interview;
+          Interview.create({ notes: interviewNotes, type: type, status: status, resumeVersion: resumeVersion },
+            (err, interviews) => {
+              if (err) {
+                return next({
+                  log: 'Interview document creation failure',
+                  status: 400,
+                  message: { err: 'Interview document not created' },
+                });
+              } else {
+                res.locals.interviews = interviews;
+              }
+            })
+        }
+        // handle edge case that there is no contact information
+        if (contact !== undefined) {
+          const { name, phone, email, contactNotes, lastContact } = contact;
+          Contact.create({ name: name, phone: phone, email: email, notes: contactNotes, lastContact: lastContact },
+            (err, contacts) => {
+              if (err) {
+                return next({
+                  log: 'Contact document creation failure',
+                  status: 400,
+                  message: { err: 'Contact document not created' },
+                });
+              } else {
+                res.locals.contacts = contacts;
+              }
+            })
+        }
+        console.log('job has been added: ', job)
+        res.locals.job = job;
         return next();
       }
     }
   );
 };
 
-// Get all jobs -> will be passed a req.body.status that has an array of all status
-// Need to merge the status with the job before returning to front end
 jobController.getAll = async (req, res, next) => {
-  try {
-    const jobs = await Job.find({});
-    res.locals.jobs = jobs;
-    return next();
-  } catch (err) {
+    return await Job.find({}).lean() //lean() is required to get plain JS, which can be updated (status added)
+      .then((data) => {
+        res.locals.jobs = data;
+        return next()
+      })
+   .catch ((err)=> {
     return next({
       log: `Error occurred in jobController getAll: ${err}`,
       message: {
         err: `An error occurred when retreiving all jobs from database. See jobController.getAll`,
       },
     });
-  }
+  })
 };
 
-// //Merge status and jobs
-jobController.merge = (req, res, next) => {
-  try {
-    // merge res.locals.jobs and res.locals.status to add status to corresponding job in res.locals.job
-    for (const job in res.locals.jobs) {
-      // find corresponding job in res.locals.status
-      const matching = res.locals.status.filter((el) => el.jobid === job._id);
-      // add status from res.locals.status to job in res.locals.jobs
-      job.status = matching.status;
-    }
-    console.log(
-      'res.locals.jobs in merge - should have statuses',
-      res.locals.jobs
-    );
-    return next();
-  } catch (err) {
-    return next({
-      log: `Error occurred in jobController merge: ${err}`,
-      message: {
-        err: `An error occurred when merging jobs and statuses. See jobController.merge`,
-      },
-    });
+jobController.merge = async (req, res, next) => {
+  try{
+    for (const stat of res.locals.allStatus) {
+        for(let i = 0; i < res.locals.jobs.length; i++) {
+          if(res.locals.jobs[i]._id.valueOf() === stat.jobid) {
+            res.locals.jobs[i].status = stat.status;
+          }
+        }
+      }
+    return next()
   }
+   catch (err) {
+     return next({
+       log: `Error occurred in jobController merge: ${err}`,
+       message: {
+         err: `An error occurred when merging jobs and status. See jobController.merge`,
+       },
+     });
+   }
 };
 
 // //Update a job
@@ -236,53 +219,77 @@ jobController.updateJob = (req, res, next) => {
   );
 };
 
+jobController.findJob = async (req, res, next) => {
+  // locate a single job
+  try {
+    const jobDoc = await Job.findOne({_id: req.params._id});
+    console.log('jobDoc', jobDoc);
+    res.locals.job = jobDoc._id;
+    res.locals.contact = jobDoc.contact._id;
+    res.locals.interview = jobDoc.interview._id;
+    console.log('job', res.locals.job)
+    console.log('contact', res.locals.contact)
+    console.log('interview', res.locals.interview);
+  } catch (err) {
+    return next({
+      log: `Error occurred in jobController findJob: ${err}`,
+      message: {err: `An error occurred when finding a job from database. See jobController.findJob`}
+    })
+  }
+}
+
 // //Delete a job
-jobController.deleteJob = (req, res, next) => {
+
+jobController.deleteJob = async (req, res, next) => {
   // Locates and deletes job from MongoDB
-  // Locates a specific job in mongoDB and updates it
-  Job.findOneAndDelete({ _id: req.params._id }, (err, job) => {
-    if (err) {
-      return next({
-        log: 'Job document deletion failure',
-        status: 400,
-        message: { err: 'Job document not deleted' },
+  try {
+    // find job doc
+    const jobDoc = await Job.findOne({_id: req.params._id});
+    res.locals.job = jobDoc;
+    // delete all documents
+    Job.findOneAndDelete({ _id: req.params._id},
+      (err, job) => {
+        if (err) {
+          return next({
+            log: 'Job document deletion failure',
+            status: 400,
+            message: { err: 'Job document not deleted' },
+          });
+        } else {
+          Interview.findOneAndDelete({ _id: jobDoc.interview._id },
+            (err, interview) => {
+              if (err) {
+                return next({
+                  log: 'Interview document deletion failure',
+                  status: 400,
+                  message: { err: 'Interview document not deleted' },
+                });
+              } else {
+                res.locals.interview = interview;
+              }
+            });
+          Contact.findOneAndDelete({ _id: jobDoc.contact._id },
+            (err, contact) => {
+              if (err) {
+                return next({
+                  log: 'Contact document deletion failure',
+                  status: 400,
+                  message: { err: 'Contact document not deleted' },
+                });
+              } else {
+                res.locals.contact = contact;
+              }
+            });
+          return next();
+        };
       });
-    } else {
-      Interview.findOneAndDelete(
-        {
-          /** How do I access this? */
-        },
-        (err, interview) => {
-          if (err) {
-            return next({
-              log: 'Interview document deletion failure',
-              status: 400,
-              message: { err: 'Interview document not deleted' },
-            });
-          } else {
-            res.locals.interview = interview;
-          }
-        }
-      );
-      Contact.findOneAndUpdate(
-        {
-          /** How do I access this? */
-        },
-        (err, contact) => {
-          if (err) {
-            return next({
-              log: 'Contact document deletion failure',
-              status: 400,
-              message: { err: 'Contact document not deleted' },
-            });
-          } else {
-            res.locals.contact = contact;
-          }
-        }
-      );
-      return next();
-    }
-  });
-};
+  } catch (err) {
+    return next({
+      log: `Error occurred in jobController deleteJob: ${err}`,
+      message: {err: `An error occurred when deleting a job from database. See jobController.deleteJob`}
+    })
+  }
+
+}
 
 module.exports = jobController;
