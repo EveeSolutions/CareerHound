@@ -10,7 +10,7 @@ import { addJob } from '../reducers/jobsReducer';
 const useInput = (init) => {
   const [value, setValue] = useState(init);
   const onChange = (e) => {
-    setValue(e.value);
+    setValue(e.target.value);
   };
   // return the value with the onChange function instead of setValue function
   return [value, onChange];
@@ -18,15 +18,24 @@ const useInput = (init) => {
 
 function JobCardForm() {
   const [submitting, setSubmitting] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
     setSubmitting(true);
 
     // *a stand in for actual API call to BE
-    setTimeout(() => {
-      setSubmitting(false);
-    }, 3000);
+    fetch('/job/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/JSON'
+        },
+        body: JSON.stringify(body),
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        return data;
+    })
+    .catch(console.log(body));
   };
 
   const state = useSelector((state) => state);
@@ -47,6 +56,21 @@ function JobCardForm() {
   const [interviewNotes, interviewNotesOnChange] = useInput('');
   const [interviewStatus, interviewStatusOnChange] = useInput('');
   const [generalNotes, generalNotesOnChange] = useInput('');
+
+  const body = {
+    title,
+    company,
+    location,
+    link,
+    skills,
+    salary,
+    benefits,
+    contactName,
+    email,
+    lastContacted,
+    generalNotes,
+    interviewDate,
+  };
 
   useEffect(() => {
     console.log('jobForm jobs', state.jobs);
@@ -100,11 +124,10 @@ function JobCardForm() {
           <label>
             <p>Job Title:</p>
             <input
-              name="job_title"
+              name="jobTitle"
               value={title}
               onChange={titleOnChange}
               required
-              id="title"
             />
           </label>
           <label>
@@ -152,7 +175,7 @@ function JobCardForm() {
           <label>
             <p>Contact Name:</p>
             <input
-              name="contact name"
+              name="contactName"
               value={contactName}
               onChange={contactNameOnChange}
             />
@@ -164,7 +187,7 @@ function JobCardForm() {
           <label>
             <p>Last Contacted:</p>
             <input
-              name="Last Contacted"
+              name="lastContacted"
               value={lastContacted}
               onChange={lastContactedOnChange}
             />
@@ -223,39 +246,41 @@ function JobCardForm() {
             onChange={generalNotesOnChange}
           />
         </fieldset>
-        <button type="submit" onClick={handleSubmitJob}>
-          {/* //onClick={() => { handleSubmit() } */}
-          {/*  // dispatch(addJob({ */}
-          {/*  //     mongoId: 2, */}
-          {/*  //     status: status, */}
-          {/*  //     timestamp: null, */}
-          {/*  //     jobInfo: { */}
-          {/*  //       title: title, */}
-          {/*  //       company: company, */}
-          {/*  //       salary: salary, */}
-          {/*  //       benefits: benefits, */}
-          {/*  //       location: location, */}
-          {/*  //       skills: skills, */}
-          {/*  //       link: link, */}
-          {/*  //       contact: */}
-          {/*  //       { */}
-          {/*  //         name: 'John Smith', */}
-          {/*  //         phone: '7738675309', */}
-          {/*  //         email: 'johnsmith@spotify.com', */}
-          {/*  //         notes: 'balding', */}
-          {/*  //         lastContact: 'Nov 1 2022, 09:52:32' */}
-          {/*  //       }, */}
-          {/*  //       notes: generalNotes, */}
-          {/*  //       interview: */}
-          {/*  //       { */}
-          {/*  //         date: interviewDate, */}
-          {/*  //         notes: interviewNotes, */}
-          {/*  //         type: interviewType, */}
-          {/*  //         status: 'pass' */}
-          {/*  //       }, */}
-          {/*  //     } */}
-          {/*  //   }))} */}
-          {/* // }}> */}
+        <button
+          type="submit"
+          onClick={() => {
+            dispatch(
+              addJob({
+                mongoId: 2,
+                status: status,
+                timestamp: null,
+                jobInfo: {
+                  title: title,
+                  company: company,
+                  salary: salary,
+                  benefits: benefits,
+                  location: location,
+                  skills: skills,
+                  link: link,
+                  contact: {
+                    name: 'John Smith',
+                    phone: '7738675309',
+                    email: 'johnsmith@spotify.com',
+                    notes: 'balding',
+                    lastContact: 'Nov 1 2022, 09:52:32',
+                  },
+                  notes: generalNotes,
+                  interview: {
+                    date: interviewDate,
+                    notes: interviewNotes,
+                    type: interviewType,
+                    status: 'pass',
+                  },
+                },
+              })
+            );
+          }}
+        >
           Submit
         </button>
       </form>

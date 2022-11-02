@@ -6,7 +6,8 @@ const jobController = {};
 // Create Job
 jobController.createJob = (req, res, next) => {
   // destructure req.body
-  console.log('adding job')
+  console.log('adding job');
+  console.log(req.body);
   const {
     title,
     company,
