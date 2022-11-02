@@ -11,8 +11,8 @@ beforeAll(done => {
 describe('It creates a job', () => {
   it('responds with a status 200 and creates adds a job to the database', () => {
     const body = {
-      // title: 'test title',
-      company: 'test company',
+      title: 'jest title',
+      company: 'jest company',
       location: 'Silicon Valley',
       link: 'www.google.com/givemeajob',
       };
@@ -22,8 +22,8 @@ describe('It creates a job', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
       .expect((res) => {
-        expect(res.body.title).toEqual('test title')
-        expect(res.body.id).toBeDefined();
+        expect(res.body.title).toEqual('jest title')
+        expect(res.body._id).toBeDefined();
       })
 
   })
