@@ -35,7 +35,8 @@
     "no-shadow": "off",
     "consistent-return": "off",
     "no-restricted-syntax": "off",
-    "guard-for-in": "off"
+    "guard-for-in": "off",
+    "jsx-a11y/label-has-associated-control": 0
   },
   "settings": {
     "react": {
