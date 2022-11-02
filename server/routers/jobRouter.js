@@ -27,9 +27,9 @@ router.post('/create', jobController.createJob,
 //   return res.status(200).json(res.locals.job)
 //   })
 
-// router.post('/delete', jobController.deleteJob, statusController.deleteStatus,
-//   (req, res) => {
-//   return res.status(200).json(res.locals.job)
-//   })
+router.delete('/:id', jobController.findJob, jobController.deleteJob, /** statusController.deleteStatus,*/
+  (req, res) => {
+  return res.status(200).json(res.locals.job)
+  })
 
 module.exports = router;
