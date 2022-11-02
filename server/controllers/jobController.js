@@ -6,6 +6,7 @@ const jobController = {};
 // Create Job
 jobController.createJob = (req, res, next) => {
   // destructure req.body
+  console.log('adding job')
   const {
     title,
     company,
@@ -73,6 +74,7 @@ jobController.createJob = (req, res, next) => {
               }
             })
         }
+        console.log('job has been added: ', job)
         res.locals.job = job;
         return next();
       }
@@ -99,23 +101,26 @@ jobController.getAll = async (req, res, next) => {
 
 // //Merge status and jobs
 jobController.merge = async (req, res, next) => {
-  console.log('in merge: ', res.locals.allStatus)
-    for (const status in res.locals.allStatus) {
-      if (res.locals.allStatus.jobid in res.locals.jobs) {
-        res.locals.jobs[status.jobid].status = res.locals.allStatus.status;
+  console.log('all statuses: ', res.locals.allStatus)
+  try{
+    for (const stat in res.locals.allStatus) {
+        for(const job of res.locals.jobs) {
+          if(job._id === stat.jobid) {
+            job.status = stat.status
+          }
+        }
       }
-    }
     // console.log('after merge', res.locals.jobs)
-  return next()
-    .catch ((err)=> {
-      return next({
-        log: `Error occurred in jobController merge: ${err}`,
-        message: {
-          err: `An error occurred when merging jobs and status. See jobController.merge`,
-        },
-      });
-    })
-
+    return next()
+  }
+   catch (err) {
+     return next({
+       log: `Error occurred in jobController merge: ${err}`,
+       message: {
+         err: `An error occurred when merging jobs and status. See jobController.merge`,
+       },
+     });
+   }
 };
 
 // //Update a job

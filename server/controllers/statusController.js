@@ -39,14 +39,16 @@ statusController.getArchived = async (req, res, next) => {
   }
 };
 
-statusController.CreateJobStatus = async (req, res, next) => {
+statusController.createJobStatus = async (req, res, next) => {
   const querStr =
     'INSERT INTO jobs (jobId, status, user_id) VALUES($1, $2, $3)';
   const userId = 1; // until we implement auth
   const status = 'interested'; // unless we want user to be able to change on creation
+  const _id  = res.locals.job._id.valueOf();
+  const values = [_id, status, userId];
+  console.log('id in sql', _id)
   try {
-    const { _id } = res.locals.jobs;
-    const values = [_id, status, userId];
+
 
     const queryRes = await db.query(querStr, values);
 
