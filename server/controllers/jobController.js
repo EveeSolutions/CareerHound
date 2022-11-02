@@ -6,7 +6,8 @@ const jobController = {};
 // Create Job
 jobController.createJob = (req, res, next) => {
   // destructure req.body
-  console.log('adding job')
+  console.log('adding job');
+  console.log(req.body);
   const {
     title,
     company,
@@ -83,10 +84,9 @@ jobController.createJob = (req, res, next) => {
 };
 
 jobController.getAll = async (req, res, next) => {
-    return await Job.find({})
+    return await Job.find({}).lean() //lean() is required to get plain JS, which can be updated (status added)
       .then((data) => {
         res.locals.jobs = data;
-        // console.log(res.locals.jobs)
         return next()
       })
    .catch ((err)=> {
@@ -99,18 +99,15 @@ jobController.getAll = async (req, res, next) => {
   })
 };
 
-// //Merge status and jobs
 jobController.merge = async (req, res, next) => {
-  console.log('all statuses: ', res.locals.allStatus)
   try{
-    for (const stat in res.locals.allStatus) {
-        for(const job of res.locals.jobs) {
-          if(job._id === stat.jobid) {
-            job.status = stat.status
+    for (const stat of res.locals.allStatus) {
+        for(let i = 0; i < res.locals.jobs.length; i++) {
+          if(res.locals.jobs[i]._id.valueOf() === stat.jobid) {
+            res.locals.jobs[i].status = stat.status;
           }
         }
       }
-    // console.log('after merge', res.locals.jobs)
     return next()
   }
    catch (err) {

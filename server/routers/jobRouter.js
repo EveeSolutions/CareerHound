@@ -27,7 +27,9 @@ router.post(
   jobController.createJob,
   statusController.createJobStatus,
   (req, res) => {
-    return res.status(200).json(res.locals.jobs);
+    // res.header('Access-Control-Allow-Origin', '*');
+    console.log('job created', res.locals.job)
+    return res.status(200).json(res.locals.job);
   }
 );
 

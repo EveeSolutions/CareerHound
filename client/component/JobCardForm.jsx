@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../assets/styles.css';
 import { useSelector, useDispatch } from 'react-redux';
+import JobCard from './JobCard';
 
-import { addJob } from '../reducers/jobsReducer.js';
+import { addJob } from '../reducers/jobsReducer';
 
 // Custom hook for handling input boxes
 // saves us from creating onChange handlers for them individually
@@ -67,17 +68,57 @@ function JobCardForm() {
     contactName,
     email,
     lastContacted,
+    generalNotes,
+    interviewDate,
   };
 
   useEffect(() => {
     console.log('jobForm jobs', state.jobs);
-  }, {});
+    console.log(
+      'title, company, location, link',
+      title,
+      company,
+      location,
+      link
+    );
+  });
+
+  const handleSubmitJob = async (e) => {
+    e.preventDefault();
+    const company = document.getElementById('company').value;
+    const title = document.getElementById('title').value;
+    const location = document.getElementById('location').value;
+    const link = document.getElementById('link').value;
+    console.log('params', company, title, link, location);
+    await fetch('http://localhost:3000/job/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        company,
+        title,
+        link,
+        location,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const payload = {
+          data,
+        };
+        console.log(payload);
+      })
+      .catch((err) => {
+        console.log('Error when creating job: ', err);
+      });
+  };
 
   return (
     <div className="jobCardForm">
       <h3>Job Card</h3>
       {submitting && <div>Good work, keep it up! </div>}
-      <form onSubmit={handleSubmit} method='POST' action='/api/'>
+      <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Job Basics</legend>
           <label>
@@ -96,6 +137,7 @@ function JobCardForm() {
               value={company}
               onChange={companyOnChange}
               required
+              id="company"
             />
           </label>
           <label>
@@ -104,11 +146,12 @@ function JobCardForm() {
               name="location"
               value={location}
               onChange={locationOnChange}
+              id="location"
             />
           </label>
           <label>
             <p>Link:</p>
-            <input name="link" value={link} onChange={linkOnChange} />
+            <input name="link" value={link} onChange={linkOnChange} id="link" />
           </label>
           <label>
             <p>Skills:</p>
@@ -150,7 +193,7 @@ function JobCardForm() {
             />
           </label>
           <p>
-            <label for="contactNotes">Contact Notes:</label>
+            <label htmlFor="contactNotes">Contact Notes:</label>
           </p>
           <textarea id="contactNotes" name="contactNotes" rows="4" cols="50" />
         </fieldset>
@@ -181,7 +224,7 @@ function JobCardForm() {
             </select>
           </label>
           <p>
-            <label for="interviewNotes">Interview Notes:</label>
+            <label htmlFor="interviewNotes">Interview Notes:</label>
           </p>
           <textarea
             id="interviewNotes"
