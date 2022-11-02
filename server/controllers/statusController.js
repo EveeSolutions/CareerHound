@@ -3,6 +3,7 @@ const db = require('../models/sqlConnection');
 
 const statusController = {};
 
+
 // Get all status
 statusController.getAll = async (req, res, next) => {
   // return an object of status w/id - this needs to be merged with the jobs
@@ -10,7 +11,7 @@ statusController.getAll = async (req, res, next) => {
   const querStr = 'SELECT * FROM public.jobs';
   try {
     const queryRes = await db.query(querStr);
-    res.locals.allJobs = queryRes.rows;
+    res.locals.allStatus = queryRes.rows;
     return next();
   } catch (error) {
     return next({
@@ -38,14 +39,16 @@ statusController.getArchived = async (req, res, next) => {
   }
 };
 
-statusController.CreateJobStatus = async (req, res, next) => {
+statusController.createJobStatus = async (req, res, next) => {
   const querStr =
     'INSERT INTO jobs (jobId, status, user_id) VALUES($1, $2, $3)';
   const userId = 1; // until we implement auth
   const status = 'interested'; // unless we want user to be able to change on creation
+  const _id  = res.locals.job._id.valueOf();
+  const values = [_id, status, userId];
+  console.log('id in sql', _id)
   try {
-    const { _id } = res.locals.jobs;
-    const values = [_id, status, userId];
+
 
     const queryRes = await db.query(querStr, values);
 
