@@ -20,9 +20,10 @@ _id: {
  */
 const initialState = {
   // jobs is an object with keys of jobprimarykey
+  nextId: 2,
   jobs: {
     // testjob is the job's primary key "_id"
-    testjob: {
+    1: {
       mongoId: 1,
       status: 'applied',
       timestamp: null,
@@ -43,6 +44,7 @@ const initialState = {
         },
         notes: 'Likes cheese',
         interview: {
+          date: 'Nov 11 2022',
           notes: 'at office',
           type: 'behavioral',
           status: 'pass',
@@ -59,6 +61,11 @@ export const jobsSlice = createSlice({
     // updates full job state
     setJobs: (state, action) => {
       state.jobs = action.payload;
+    },
+
+    addJob: (state, action) => {
+      state.jobs[state.nextId] = action.payload;
+      state.nextId += 1;
     },
 
     /*     //to set full job info, need primary key of job being changes and the entire new job info - probably won't be used
@@ -137,6 +144,7 @@ export const jobsSlice = createSlice({
 
 export const {
   setJobs,
+  addJob,
   setJobStatus,
   setJobTitle,
   setJobCompany,

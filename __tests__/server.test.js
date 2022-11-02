@@ -1,5 +1,5 @@
-const supertest = require('supertest')
-mongoose = require ('mongoose')
+const supertest = require('supertest');
+const mongoose = require ('mongoose');
 // const { describe, expect } = require(@jest/globals);
 const app = require('../server/server')
 

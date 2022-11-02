@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import StatusContainer from './component/StatusContainer.jsx';
 import { useSelector, useDispatch } from 'react-redux';
+import Modal from './component/Modal.jsx';
+import {useState} from 'react'
 //import { setJobSalary, setJobStatus, setJobBenefits } from './reducers/jobsReducer';
 
 function App() { 
+  const [show, setShow] = useState(false)
   const jobs = useSelector((state) => state.jobs);
   const dispatch = useDispatch();
   console.log(jobs)
@@ -11,7 +14,7 @@ function App() {
 
   useEffect(() => {
     //make fetch request here to fill initial redux store at app render and update whenever state is changed
-    console.log(jobs);
+    // console.log('app jobs', jobs);
   }, {})
 
 
@@ -50,6 +53,8 @@ function App() {
       <button onClick={() => dispatch(setJobStatus({_id: 'testjob', status: 'interviewing', timestamp: Date.now()}))}>Set Status</button>
       <button onClick={() => dispatch(addJobBenefits({_id: 'testjob', benefits: ['test benefit 1', 'test benefit 2'], timestamp: Date.now()}))}>Add Benefits</button> */}
       <StatusContainer />
+      <button onClick={() => setShow(true)}>Add New Job</button>
+      <Modal onClose={() => setShow(false)} show = {show}/>
     </div>  
   )
 }
