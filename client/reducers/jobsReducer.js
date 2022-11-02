@@ -18,7 +18,7 @@ _id: {
   userID: integer
 }
  */
-const initialState = {
+/* const initialState = {
   // jobs is an object with keys of jobprimarykey
   nextId: 2,
   jobs: {
@@ -52,6 +52,12 @@ const initialState = {
       },
     },
   },
+}; */
+
+const initialState = {
+  // jobs is an object with keys of jobprimarykey
+  nextId: 1,
+  jobs: {},
 };
 
 export const jobsSlice = createSlice({

@@ -5,6 +5,6 @@ import userReducer from './reducers/userReducer';
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    jobs: jobsReducer
+    jobs: jobsReducer,
   },
-})
+});
