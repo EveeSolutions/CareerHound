@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-//fetch on load will pull all jobs the current user is involved in- that have foreign key that is their primary key/userID
-//each job will look like: 
+import { createSlice } from '@reduxjs/toolkit';
+// fetch on load will pull all jobs the current user is involved in- that have foreign key that is their primary key/userID
+// each job will look like:
 /* 
 _id: {
   mongoID: integer/char,
@@ -18,11 +18,11 @@ _id: {
   userID: integer
 }
  */
-const initialState = { 
-  //jobs is an object with keys of jobprimarykey 
+const initialState = {
+  // jobs is an object with keys of jobprimarykey
   jobs: {
-    //testjob is the job's primary key "_id"
-    'testjob': {
+    // testjob is the job's primary key "_id"
+    testjob: {
       mongoId: 1,
       status: 'applied',
       timestamp: null,
@@ -34,45 +34,43 @@ const initialState = {
         location: 'Remote',
         skills: ['JavaScript', 'HTML', 'CSS'],
         link: 'spotify.com',
-        contact:
-        {
+        contact: {
           name: 'John Smith',
           phone: '7738675309',
           email: 'johnsmith@spotify.com',
           notes: 'balding',
-          lastContact: 'Nov 1 2022, 09:52:32'
+          lastContact: 'Nov 1 2022, 09:52:32',
         },
         notes: 'Likes cheese',
-        interview:
-        {
+        interview: {
           notes: 'at office',
           type: 'behavioral',
-          status: 'pass'
+          status: 'pass',
         },
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};
 
 export const jobsSlice = createSlice({
   name: 'jobs',
   initialState,
   reducers: {
-    //updates full job state
+    // updates full job state
     setJobs: (state, action) => {
       state.jobs = action.payload;
     },
 
-/*     //to set full job info, need primary key of job being changes and the entire new job info - probably won't be used
+    /*     //to set full job info, need primary key of job being changes and the entire new job info - probably won't be used
     //for testing purposes only
     setJobInfo: (state, action) => {
       state.jobs[action.payload._id].jobInfo = action.payload.jobInfo;
     }, */
 
-    //action payload status should always be a string
+    // action payload status should always be a string
     setJobStatus: (state, action) => {
       state.jobs[action.payload._id].status = action.payload.status;
-      //state.jobs[action.payload._id].timestamp = action.payload.timestamp;
+      // state.jobs[action.payload._id].timestamp = action.payload.timestamp;
     },
 
     setJobTitle: (state, action) => {
@@ -83,18 +81,21 @@ export const jobsSlice = createSlice({
       state.jobs[action.payload._id].jobInfo.company = action.payload.company;
     },
 
-    //to set salary, need the primary key of the job being changed and the new salary (integer) from the form input in action.payload.salary
+    // to set salary, need the primary key of the job being changed and the new salary (integer) from the form input in action.payload.salary
     setJobSalary: (state, action) => {
       state.jobs[action.payload._id].jobInfo.salary = action.payload.salary;
     },
 
-    //to add benefits, need primary key of job being changed and array of added benefits in action.payload.benefits
-    //also should work when benefits array starts off empty
+    // to add benefits, need primary key of job being changed and array of added benefits in action.payload.benefits
+    // also should work when benefits array starts off empty
     addJobBenefits: (state, action) => {
-      state.jobs[action.payload._id].jobInfo.benefits = [...state.jobs[action.payload._id].jobInfo.benefits, ...action.payload.benefits]
+      state.jobs[action.payload._id].jobInfo.benefits = [
+        ...state.jobs[action.payload._id].jobInfo.benefits,
+        ...action.payload.benefits,
+      ];
     },
 
-    //to clear benefits in case you want to remove a previously added benefit
+    // to clear benefits in case you want to remove a previously added benefit
     clearJobBenefits: (state, action) => {
       state.jobs[action.payload._id].jobInfo.benefits = [];
     },
@@ -111,14 +112,15 @@ export const jobsSlice = createSlice({
       state.jobs[action.payload._id].jobInfo.link = action.payload.link;
     },
 
-    //can set contact by having primary key and full new contact object.
+    // can set contact by having primary key and full new contact object.
     setJobContact: (state, action) => {
       state.jobs[action.payload._id].jobInfo.contact = action.payload.contact;
     },
 
-    //modular reducer, will change the state contact property specified in payload property key, and change it to payload.value
+    // modular reducer, will change the state contact property specified in payload property key, and change it to payload.value
     editJobContact: (state, action) => {
-      state.jobs[action.payload._id].jobInfo.contact[action.payload.property] = action.payload.value;
+      state.jobs[action.payload._id].jobInfo.contact[action.payload.property] =
+        action.payload.value;
     },
 
     setJobNotes: (state, action) => {
@@ -126,15 +128,16 @@ export const jobsSlice = createSlice({
     },
 
     editJobInterview: (state, action) => {
-      state.jobs[action.payload._id].jobInfo.interview[action.payload.property] = action.payload.value;
+      state.jobs[action.payload._id].jobInfo.interview[
+        action.payload.property
+      ] = action.payload.value;
     },
-
-  }
+  },
 });
 
-export const { 
+export const {
   setJobs,
-  setJobStatus, 
+  setJobStatus,
   setJobTitle,
   setJobCompany,
   setJobSalary,
@@ -146,6 +149,7 @@ export const {
   setJobContact,
   editJobContact,
   setJobNotes,
-  editJobInterview } = jobsSlice.actions;
+  editJobInterview,
+} = jobsSlice.actions;
 
 export default jobsSlice.reducer;
