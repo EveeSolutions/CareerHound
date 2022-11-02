@@ -46,14 +46,9 @@ statusController.createJobStatus = async (req, res, next) => {
   const status = 'interested'; // unless we want user to be able to change on creation
   const _id  = res.locals.job._id.valueOf();
   const values = [_id, status, userId];
-  console.log('id in sql', _id)
   try {
-
-
-    const queryRes = await db.query(querStr, values);
-
+    const queryRes = db.query(querStr, values);
     console.log('statusController.CreateJobStatus= => queryRes', queryRes.rows);
-
     res.locals.sqlJob = queryRes.rows;
     return next();
   } catch (error) {
