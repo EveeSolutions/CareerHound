@@ -10,8 +10,9 @@ function Modal (props) {
       <div className="modal"> 
         <div className="modal-content">
             <div className="modal-header">
+                
             <button onClick={props.onClose} className="button">Close</button>
-                <h4 className="nodal-title">Modal Title</h4>
+                {/* <h4 className="nodal-title">Modal Title</h4> */}
             </div>
             <div className="modal-body">
                 <JobCardForm />
@@ -22,7 +23,5 @@ function Modal (props) {
       </div>
     )
 }
-
-
 
 export default Modal;

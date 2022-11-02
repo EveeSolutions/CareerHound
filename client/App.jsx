@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     //make fetch request here to fill initial redux store at app render and update whenever state is changed
-    console.log(jobs);
+    // console.log('app jobs', jobs);
   }, {})
 
 
