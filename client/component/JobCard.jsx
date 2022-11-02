@@ -1,10 +1,10 @@
 import React from 'react'
 
-function expandedJobCard(props) {
-    if (!props.expand) {
-        return null
-    }
-}
+// function expandedJobCard(props) {
+//     if (!props.expand) {
+//         return null
+//     }
+// }
 
 function JobCard() {
 
@@ -15,7 +15,7 @@ function JobCard() {
             <li className='miniDetail'>Job Title: {}</li>
             <li className='miniDetail'>Company: {}</li>
         </ul>
-        <button onClick={() => }>+</button>
+        <button>+</button>
     </div>
 
   )
