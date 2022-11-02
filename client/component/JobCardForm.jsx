@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../assets/styles.css';
 import { useSelector, useDispatch } from 'react-redux';
+import JobCard from './JobCard';
 
-import { addJob } from '../reducers/jobsReducer.js';
+import { addJob } from '../reducers/jobsReducer';
 
 // Custom hook for handling input boxes
 // saves us from creating onChange handlers for them individually
