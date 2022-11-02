@@ -21,12 +21,13 @@ statusController.getAll = async (req, res, next) => {
   }
 };
 // Gets archived status
-statusController.getArchived = (req, res, next) => {
+statusController.getArchived = async (req, res, next) => {
   // return an object of status archieved w/id - this needs to be merged with jobs
   // in middleware downstream
-  const querStr = '';
-
+  const querStr = "SELECT * FROM public.jobs WHERE status = 'archived';";
   try {
+    const queryRes = await db.query(querStr);
+    res.locals.archivedJobs = queryRes.rows;
     return next();
   } catch (error) {
     return next({
@@ -37,11 +38,11 @@ statusController.getArchived = (req, res, next) => {
   }
 };
 
-statusController.updateStatus = (req, res, next) => {
+statusController.updateStatus = async (req, res, next) => {
   // updates the status of job based on id in req.
   // returns the job object with the new status on res.locals.job
   // I don't think there's any necessity in accessing mongoDB
-  const querStr = '';
+  const querStr = 'UPSERT into public.jobs';
 
   try {
     return next();
@@ -55,7 +56,7 @@ statusController.updateStatus = (req, res, next) => {
 };
 
 // Deletes status
-statusController.deleteStatus = (req, res, next) => {
+statusController.deleteStatus = async (req, res, next) => {
   // Locate job to be deleted on res.locals.job
   // Delete status from DB
   // Return res.locals.job w/ the ID of the deleted status (I think)
