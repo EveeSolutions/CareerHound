@@ -11,6 +11,7 @@ jobController.createJob = (req, res, next) => {
   Job.create({ title: title, company: company, salary: salary, benefits: benefits, location: location, skills: skills, link: link, contact: contact, notes: jobNotes, interview: interview},
     (err, jobs) => {
       if (err) {
+        console.log(jobs, err)
         return next({
           log: 'Job document creation failure',
           status: 400,
@@ -18,7 +19,7 @@ jobController.createJob = (req, res, next) => {
         });
       } else {
         const { interviewNotes, type, status, resumeVersion } = interview;
-        Interview.create({ notes: interviewNotes, type: type, status: status, resumeVersion: resumeVersion }, 
+        Interview.create({ notes: interviewNotes, type: type, status: status, resumeVersion: resumeVersion },
           (err, interviews) => {
             if (err) {
               return next({
@@ -31,7 +32,7 @@ jobController.createJob = (req, res, next) => {
             }
         })
         const { name, phone, email, contactNotes, lastContact } = contact;
-        Contact.create({ name: name, phone: phone, email: email, notes: contactNotes, lastContact: lastContact }, 
+        Contact.create({ name: name, phone: phone, email: email, notes: contactNotes, lastContact: lastContact },
           (err, contacts) => {
             if (err) {
               return next({
@@ -148,7 +149,7 @@ jobController.deleteJob = (req, res, next) => {
           message: { err: 'Job document not deleted' },
         });
       } else {
-        Interview.findOneAndDelete({ /** How do I access this? */ }, 
+        Interview.findOneAndDelete({ /** How do I access this? */ },
           (err, interview) => {
             if (err) {
               return next({
@@ -160,7 +161,7 @@ jobController.deleteJob = (req, res, next) => {
               res.locals.interview = interview;
             }
         });
-      Contact.findOneAndUpdate({ /** How do I access this? */ }, 
+      Contact.findOneAndUpdate({ /** How do I access this? */ },
         (err, contact) => {
           if (err) {
             return next({

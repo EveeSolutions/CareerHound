@@ -38,6 +38,6 @@ const Job = mongoose.model('Job', jobSchema);
 
 module.exports = {
     Job,
-    Contact,
-    Interview
+    // Contact,
+    // Interview
 };
