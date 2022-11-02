@@ -44,6 +44,7 @@
     "@mui/system": "^5.10.12",
     "@reduxjs/toolkit": "^1.8.6",
     "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "cypress": "^10.11.0",
     "dotenv": "^16.0.3",

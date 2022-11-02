@@ -10,6 +10,7 @@ function App() {
   const dispatch = useDispatch();
   console.log(jobs);
 
+//USE EFFECT ONLY TAKES AN ARRAY AS A SECOND ARGUMENT!
   useEffect(() => {
     // make fetch request here to fill initial redux store at app render and update whenever state is changed
     // console.log('app jobs', jobs);

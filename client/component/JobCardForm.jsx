@@ -10,7 +10,7 @@ import { addJob } from '../reducers/jobsReducer';
 const useInput = (init) => {
   const [value, setValue] = useState(init);
   const onChange = (e) => {
-    setValue(e.target.value);
+    setValue(e.value);
   };
   // return the value with the onChange function instead of setValue function
   return [value, onChange];
@@ -18,8 +18,9 @@ const useInput = (init) => {
 
 function JobCardForm() {
   const [submitting, setSubmitting] = useState(false);
-  const handleSubmit = (event) => {
-    event.preventDefault();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setSubmitting(true);
 
     // *a stand in for actual API call to BE
@@ -49,7 +50,45 @@ function JobCardForm() {
 
   useEffect(() => {
     console.log('jobForm jobs', state.jobs);
-  }, {});
+    console.log(
+      'title, company, location, link',
+      title,
+      company,
+      location,
+      link
+    );
+  });
+
+  const handleSubmitJob = async (e) => {
+    e.preventDefault();
+    const company = document.getElementById('company').value;
+    const title = document.getElementById('title').value;
+    const location = document.getElementById('location').value;
+    const link = document.getElementById('link').value;
+    console.log('params', company, title, link, location);
+    await fetch('http://localhost:3000/job/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        company,
+        title,
+        link,
+        location,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const payload = {
+          data,
+        };
+        console.log(payload);
+      })
+      .catch((err) => {
+        console.log('Error when creating job: ', err);
+      });
+  };
 
   return (
     <div className="jobCardForm">
@@ -65,54 +104,39 @@ function JobCardForm() {
               value={title}
               onChange={titleOnChange}
               required
-              type="text"
+              id="title"
             />
           </label>
           <label>
             <p>Company:</p>
             <input
               name="company"
-              type="text"
               value={company}
               onChange={companyOnChange}
               required
+              id="company"
             />
           </label>
           <label>
             <p>Location:</p>
             <input
               name="location"
-              type="text"
               value={location}
               onChange={locationOnChange}
+              id="location"
             />
           </label>
           <label>
             <p>Link:</p>
-            <input
-              name="link"
-              type="text"
-              value={link}
-              onChange={linkOnChange}
-            />
+            <input name="link" value={link} onChange={linkOnChange} id="link" />
           </label>
           <label>
             <p>Skills:</p>
-            <input
-              name="skills"
-              type="text"
-              value={skills}
-              onChange={skillsOnChange}
-            />
+            <input name="skills" value={skills} onChange={skillsOnChange} />
           </label>
           <label>
             <p>Salary:</p>
-            <input
-              name="salary"
-              type="text"
-              value={salary}
-              onChange={salaryOnChange}
-            />
+            <input name="salary" value={salary} onChange={salaryOnChange} />
           </label>
           <label>
             <p>Benefits:</p>
@@ -129,25 +153,18 @@ function JobCardForm() {
             <p>Contact Name:</p>
             <input
               name="contact name"
-              type="text"
               value={contactName}
               onChange={contactNameOnChange}
             />
           </label>
           <label>
             <p>Email:</p>
-            <input
-              name="email"
-              type="text"
-              value={email}
-              onChange={emailOnChange}
-            />
+            <input name="email" value={email} onChange={emailOnChange} />
           </label>
           <label>
             <p>Last Contacted:</p>
             <input
               name="Last Contacted"
-              type="text"
               value={lastContacted}
               onChange={lastContactedOnChange}
             />
@@ -163,7 +180,6 @@ function JobCardForm() {
             <p>Interview Date:</p>
             <input
               name="interviewDate"
-              type="text"
               value={interviewDate}
               onChange={interviewDateOnChange}
             />
@@ -172,6 +188,8 @@ function JobCardForm() {
             <p>Interview Type:</p>
             <select
               className="dropdown"
+              list
+              name="interviewType"
               id="select list"
               value={interviewType}
               onChange={interviewTypeOnChange}
@@ -205,42 +223,39 @@ function JobCardForm() {
             onChange={generalNotesOnChange}
           />
         </fieldset>
-        <button
-          type="submit"
-          onClick={() => {
-            dispatch(
-              addJob({
-                mongoId: 2,
-                // status,
-                timestamp: null,
-                jobInfo: {
-                  title,
-                  company,
-                  salary,
-                  benefits,
-                  location,
-                  skills,
-                  link,
-                  contact: {
-                    name: 'John Smith',
-                    phone: '7738675309',
-                    email: 'johnsmith@spotify.com',
-                    notes: 'balding',
-                    lastContact: 'Nov 1 2022, 09:52:32',
-                  },
-                  notes: generalNotes,
-                  interview: {
-                    date: interviewDate,
-                    notes: interviewNotes,
-                    type: interviewType,
-                    status: 'pass',
-                  },
-                },
-              }),
-              <JobCard />
-            );
-          }}
-        >
+        <button type="submit" onClick={handleSubmitJob}>
+          {/* //onClick={() => { handleSubmit() } */}
+          {/*  // dispatch(addJob({ */}
+          {/*  //     mongoId: 2, */}
+          {/*  //     status: status, */}
+          {/*  //     timestamp: null, */}
+          {/*  //     jobInfo: { */}
+          {/*  //       title: title, */}
+          {/*  //       company: company, */}
+          {/*  //       salary: salary, */}
+          {/*  //       benefits: benefits, */}
+          {/*  //       location: location, */}
+          {/*  //       skills: skills, */}
+          {/*  //       link: link, */}
+          {/*  //       contact: */}
+          {/*  //       { */}
+          {/*  //         name: 'John Smith', */}
+          {/*  //         phone: '7738675309', */}
+          {/*  //         email: 'johnsmith@spotify.com', */}
+          {/*  //         notes: 'balding', */}
+          {/*  //         lastContact: 'Nov 1 2022, 09:52:32' */}
+          {/*  //       }, */}
+          {/*  //       notes: generalNotes, */}
+          {/*  //       interview: */}
+          {/*  //       { */}
+          {/*  //         date: interviewDate, */}
+          {/*  //         notes: interviewNotes, */}
+          {/*  //         type: interviewType, */}
+          {/*  //         status: 'pass' */}
+          {/*  //       }, */}
+          {/*  //     } */}
+          {/*  //   }))} */}
+          {/* // }}> */}
           Submit
         </button>
       </form>
