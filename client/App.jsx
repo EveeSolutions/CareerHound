@@ -5,17 +5,17 @@ import Modal from './component/Modal.jsx';
 import {useState} from 'react'
 //import { setJobSalary, setJobStatus, setJobBenefits } from './reducers/jobsReducer';
 
-function App() { 
+function App() {
   const [show, setShow] = useState(false)
   const jobs = useSelector((state) => state.jobs);
   const dispatch = useDispatch();
   console.log(jobs)
-  
 
+//USE EFFECT ONLY TAKES AN ARRAY AS A SECOND ARGUMENT!
   useEffect(() => {
     //make fetch request here to fill initial redux store at app render and update whenever state is changed
     // console.log('app jobs', jobs);
-  }, {})
+  })
 
 
 
@@ -55,7 +55,7 @@ function App() {
       <StatusContainer />
       <button onClick={() => setShow(true)}>Add New Job</button>
       <Modal onClose={() => setShow(false)} show = {show}/>
-    </div>  
+    </div>
   )
 }
 
