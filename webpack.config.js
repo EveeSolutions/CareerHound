@@ -16,9 +16,9 @@ module.exports = {
   mode: 'development',
   devServer: {
     static: {
-          publicPath: 'dist',
-          directory: path.resolve(__dirname, 'dist')
-        },
+      publicPath: 'dist',
+      directory: path.resolve(__dirname, 'dist'),
+    },
     hot: true,
 
     proxy: {
